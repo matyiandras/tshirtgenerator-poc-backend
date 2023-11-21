@@ -12,11 +12,16 @@ app.post('/generate-image', async (req, res) => {
   try {
     const response = await openai.images.generate({
       prompt: req.body.prompt,
-      n: 1
+      size: "512x512",
+      n: 1,
+      response_format: "b64_json",
     });
+
     console.log(req.body.prompt);
-    image_url = response.data[0].url;
-    res.send({ image_url });
+
+    image_url = response.data[0].b64_json;
+
+    res.send({ url: image_url});
   } catch (error) {
     console.error('Error calling OpenAI API:', error);
     res.status(500).send('Error generating image');
